@@ -30,18 +30,26 @@ def get_heart_rate(auth2_client, date, granularity='1sec'):
 
     time_list = []
     val_list = []
+    date_list = []
     
     for i in heart_rate_raw['activities-heart-intraday']['dataset']:
         val_list.append(i['value'])
         time_list.append(i['time'])
+        date_list.append(date)
     
-    heart_rate_df = pd.DataFrame({'Heart Rate':val_list,'Time':time_list})
+    heart_rate_df = pd.DataFrame({'Date': date_list,'Heart Rate':val_list,'Time':time_list})
     
     return heart_rate_df
+
+START_DATE = '2018-01-20'
+END_DATE = '2018-01-31'  
+DATES = pd.date_range(start=START_DATE, end=END_DATE).tolist()
+DATES = [date.strftime('%Y-%m-%d') for date in DATES]
     
-    
-for i in range(20,31):
-    date_today = '2018-01-' + str(i)
-    heart_rate_df = get_heart_rate(auth2_client, date_today)
-    FILEPATH = './data/' + date_today + '.csv'
-    heart_rate_df.to_csv(FILEPATH)
+heart_rate_dfs = []
+for date in DATES:
+    heart_rate_dfs.append(get_heart_rate(auth2_client, date))
+
+heart_rate_df = pd.concat(heart_rate_dfs, axis=0, ignore_index=True)
+FILEPATH = './data/' + 'heart_rate ' + START_DATE + ' to ' + END_DATE + '.csv'
+heart_rate_df.to_csv(FILEPATH, index=False)
