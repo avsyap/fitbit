@@ -47,7 +47,7 @@ def get_heart_rate(auth2_client, date, granularity='1sec'):
 
 
 START_DATE = '2018-01-20'
-END_DATE = '2018-02-05'  
+END_DATE = '2018-02-13'  
 DATES = pd.date_range(start=START_DATE, end=END_DATE).tolist()
 DATES = [date.strftime('%Y-%m-%d') for date in DATES]
     
